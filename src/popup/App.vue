@@ -2,14 +2,14 @@
     <section class="hero is-small is-primary">
         <div class="hero-body">
             <div>
-                <div style="display:flex; flex-direction:row;" class="block">
-                    <p class="title is-5" style="white-space:nowrap; margin:0;">Current Weather</p>
-                    <p class="subtitle is-6" style="text-align:right; white-space:nowrap; margin:0; margin-left:3em;" v-if="!loadingUserLocation">
+                <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap">
+                    <p class="title is-5 m-0 nowrap">Current Weather</p>
+                    <p class="subtitle is-6 has-text-right nowrap m-0 ml-6" v-if="!loadingUserLocation">
                         <a class="query-input-button" @click="toggleQueryInput()">{{loadedQuery}}</a>
                     </p>
                 </div>
                 <div v-if="editingQuery" class="block"> 
-                    <div style="text-align:center">Search by <strong>City, State</strong></div>
+                    <h3 class="title is-5 has-text-centered">Search by <strong>City, State</strong></h3>
                     <form v-on:submit="submitQuery">
                         <div class="field">
 
@@ -36,7 +36,7 @@
                 <hr>
                 <h5 class="subtitle is-6 has-text-centered" style="margin:-24px 0 6px 0;">Forecast</h5>
                 <div class="block" style="display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-around;">
-                    <div v-for="day in data.weekly.list">
+                    <div v-for="day in data.weekly.list" v-bind:key="day.date">
                         <WeatherForecast v-bind:unit="unit" v-bind:weatherData="day.items[0]"></WeatherForecast>
                     </div>
                 </div>
@@ -119,16 +119,14 @@ export default {
             this.data = data
             
             this.loadedQuery = `${city}, ${state}`
-              console.log(data);
-            })
-            .catch(err => {
-              console.log(err);
-            }).finally(()=>{
-            
-                this.editingQuery = false;
-                this.loadingWeatherData = false;
-                
-            })
+            console.log(data);
+        })
+        .catch(err => {
+            console.log(err);
+        }).finally(()=>{
+            this.editingQuery = false;
+            this.loadingWeatherData = false;
+        })
     }
   
   }
@@ -147,5 +145,8 @@ export default {
 }
 .hero a:not(.button) {
     border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+}
+.nowrap {
+    white-space:nowrap;
 }
 </style>

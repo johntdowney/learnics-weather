@@ -14,6 +14,9 @@ export default {
 			const response = await axios.get(url.toString())
 
 			result = response.data;
+			for(let i = 0; i < result.weather.length; i+=1) {
+				result.weather.id = i;
+			}
 		} catch (e) { result = e; }
 
 		return result;
@@ -41,6 +44,9 @@ export default {
 							items: []
 						}
 						modifiedList.push(currentDay)
+					}
+					for(let j = 0; j < result.list[i].weather.length; j+=1) {
+						result.list[i].weather.id = j;
 					}
 					currentDay.items.push(result.list[i]);
 				}
