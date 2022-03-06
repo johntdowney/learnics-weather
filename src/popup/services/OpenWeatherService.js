@@ -11,11 +11,39 @@ export default new class {
             const url = new URL('/data/2.5/weather', API_URL);
             url.searchParams.set('appid', APP_ID);
             url.searchParams.set('q', [city, state]);
-            url.searchParams.set('units', 'imperial');
 
             let response = await axios.get(url.toString())
 
             result = response.data;
+        } catch(e) { result = e; }
+
+        return result;
+    }
+    async queryWeeklyWeather(city, state) {
+        let result = null;
+        try {
+
+            const url = new URL('/data/2.5/forecast', API_URL);
+            url.searchParams.set('appid', APP_ID);
+            url.searchParams.set('cnt', 7);
+            url.searchParams.set('q', [city, state]);
+
+            let response = await axios.get(url.toString())
+
+            result = response.data;
+        } catch(e) { result = e; }
+
+        return result;
+    }
+    
+    
+    async queryAll(city, state) {
+        const result = {current: null, weekly: null};
+        try {
+            const p1 = this.queryCurrentWeather(city, state);
+            const p2 = this.queryWeeklyWeather(city, state);
+            result.current = await p1;
+            result.weekly = await p2;
         } catch(e) { result = e; }
 
         return result;
