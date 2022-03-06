@@ -1,9 +1,6 @@
 <template>
     <div>
-        <div v-if="weatherData.isAxiosError">
-            {{weatherData.response.data.message}}
-        </div>
-        <div v-else style="display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
+        <div style="display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
             <div>
                 <h4 class="subtitle is-7 has-text-centered" style="margin:0;">{{displayDate(weatherData.dt)}}</h4>
                 <ul class="level">

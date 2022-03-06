@@ -15,14 +15,18 @@
 
                             <input :disabled="!defaultLocation || loadingWeatherData" v-bind:class="{'is-danger':!queryValid}" class="input" v-model="query" type="text" autofocus placeholder="City, State">
 
-                            <p v-if="submitted && !queryValid" class="notification is-danger" style="white-space:nowrap;">
+                            <p v-if="submitted && !queryValid" class="notification is-danger nowrap has-text-centered">
                                 Please use the form <strong>City, State</strong>.
                             </p>
 
                         </div>
-                        <div style="text-align:center;">
-                            <button :disabled="(submitted && !queryValid) || loadingWeatherData" class="button is-success" v-bind:class="{'is-loading':loadingWeatherData}" type="submit">Submit</button>
+                        <div class="has-text-centered">
+                            <button :disabled="(submitted && (!queryValid || data.current.isAxiosError)) || loadingWeatherData" class="button is-success" v-bind:class="{'is-loading':loadingWeatherData}" type="submit">Submit</button>
                         </div>
+
+                        <p class="notification is-danger nowrap has-text-centered mt-4" v-if="submitted && errorMessage">
+                            <strong>{{errorMessage}}</strong>
+                        </p>
                     </form>
                 </div>
                 <div class="has-text-centered" style="margin:4em" v-if="loadingUserLocation">
@@ -30,14 +34,17 @@
                 </div>
             </div>
             <div v-if="!editingQuery && loadedQuery">
-                <div class="block">
-                    <WeatherDetail v-bind:unit="unit" v-bind:weatherData="data.current" v-on:toggle-temp="toggleTempUnit"></WeatherDetail>
-                </div>
-                <hr>
-                <h5 class="subtitle is-6 has-text-centered" style="margin:-24px 0 6px 0;">Forecast</h5>
-                <div class="block" style="display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-around;">
-                    <div v-for="day in data.weekly.list" v-bind:key="day.date">
-                        <WeatherForecast v-bind:unit="unit" v-bind:weatherData="day.items[0]"></WeatherForecast>
+                
+                <div>
+                    <div class="block">
+                        <WeatherDetail v-bind:unit="unit" v-bind:weatherData="data.current" v-on:toggle-temp="toggleTempUnit"></WeatherDetail>
+                    </div>
+                    <hr>
+                    <h5 class="subtitle is-6 has-text-centered" style="margin:-24px 0 6px 0;">Forecast</h5>
+                    <div class="block" style="display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-around;">
+                        <div v-for="day in data.weekly.list" v-bind:key="day.date">
+                            <WeatherForecast v-bind:unit="unit" v-bind:weatherData="day.items[0]"></WeatherForecast>
+                        </div>
                     </div>
                 </div>
                 
@@ -66,6 +73,7 @@ export default {
   },
   data() {
     return { 
+        errorMessage:'',
         defaultLocation: null,
         loadingUserLocation: true,
         loadingWeatherData: true,
@@ -116,15 +124,24 @@ export default {
         
         this.loadingWeatherData = true;
         OpenWeatherService.queryAll(city, state).then(data => {
-            this.data = data
             
-            this.loadedQuery = `${city}, ${state}`
+
+             
+            if(data && !data.current.isAxiosError) {
+                this.data = data
+                this.editingQuery = data && data.current.isAxiosError;
+                this.loadedQuery = `${city}, ${state}`
+            } else if(data) {
+                this.errorMessage = data.current.response.data.message;
+            } else {
+                this.errorMessage = "Unexpected error.  Please check your internet connection and try again later."
+            }
             console.log(data);
         })
         .catch(err => {
             console.log(err);
         }).finally(()=>{
-            this.editingQuery = false;
+            
             this.loadingWeatherData = false;
         })
     }
