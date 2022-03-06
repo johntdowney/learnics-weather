@@ -6,6 +6,7 @@ const ExtensionReloader = require('webpack-extension-reloader')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
+require("babel-polyfill");
 
 // eslint-disable-next-line
 function configFunc(env, argv) {
@@ -14,10 +15,10 @@ function configFunc(env, argv) {
     devtool: isDevMode ? 'eval-source-map' : false,
     context: path.resolve(__dirname, './src'),
     entry: {
-      options: './options/index.js',
-      popup: './popup/index.js',
-      background: './background/index.js',
-      contentScripts: './contentScripts/index.js',
+      options: ["babel-polyfill", './options/index.js'],
+      popup: ["babel-polyfill", './popup/index.js'],
+      background: ["babel-polyfill", './background/index.js'],
+      contentScripts: ["babel-polyfill", './contentScripts/index.js'],
     },
     output: {
       path: path.resolve(__dirname, './dist'),

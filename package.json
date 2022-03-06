@@ -5,15 +5,18 @@
     "url": "https://mubaidr.github.io/"
   },
   "dependencies": {
+    "axios": "^0.26.0",
     "bulma-fluent": "^0.4.3",
     "vue": "^2.6.11"
   },
-  "description": "vue-chrome-extension-boilerplate",
+  "description": "A simple Chrome extension to display information about the current weather for the city that was entered.  Originally built from Muhammad Ubaid Raza's vue-chrome-extension-boilerplate at https://mubaidr.github.io/ as part of a take-home exam as part of the hiring process of Learnics.",
   "devDependencies": {
     "@babel/core": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
     "archiver": "^4.0.2",
     "babel-loader": "^8.1.0",
+    "babel-plugin-transform-regenerator": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.0.3",
     "css-loader": "^3.6.0",
