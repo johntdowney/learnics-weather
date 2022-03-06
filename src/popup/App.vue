@@ -15,7 +15,9 @@
 
                             <input :disabled="!defaultLocation || loadingWeatherData" v-bind:class="{'is-danger':!queryValid}" class="input" v-model="query" type="text" autofocus placeholder="City, State">
 
-                            <p v-if="submitted && !queryValid" class="notification is-danger" style="white-space:nowrap;">Please use the form <strong>City, State</strong>.</p>
+                            <p v-if="submitted && !queryValid" class="notification is-danger" style="white-space:nowrap;">
+                                Please use the form <strong>City, State</strong>.
+                            </p>
 
                         </div>
                         <div style="text-align:center;">
@@ -28,7 +30,7 @@
                 </div>
             </div>
             <div v-if="!editingQuery && loadedQuery">
-                <CurrentWeather v-bind:weatherData="data.current"></CurrentWeather>
+                <WeatherDetail v-bind:weatherData="data.current"></WeatherDetail>
             </div>
         </div>
     </section>
@@ -37,7 +39,7 @@
 <script>
 
 import Spinner from './Spinner.vue';
-import CurrentWeather from './CurrentWeather.vue';
+import WeatherDetail from './WeatherDetail.vue';
 import OpenWeatherService from './services/OpenWeatherService.js';
 import axios from 'axios';
 import _ from 'lodash';
@@ -46,7 +48,7 @@ export default {
   name:'app',
   components: {
     Spinner,
-    CurrentWeather
+    WeatherDetail
   },
   data() {
     return { 
