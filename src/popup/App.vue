@@ -2,13 +2,13 @@
     <section class="hero is-small is-primary">
         <div class="hero-body">
             <div>
-                <div style="display:flex; flex-direction:row;">
+                <div style="display:flex; flex-direction:row;" class="block">
                     <p class="title is-5" style="white-space:nowrap; margin:0;">Current Weather</p>
                     <p class="subtitle is-6" style="text-align:right; white-space:nowrap; margin:0; margin-left:3em;" v-if="!loadingUserLocation">
                         <a class="query-input-button" @click="toggleQueryInput()">{{loadedQuery}}</a>
                     </p>
                 </div>
-                <div v-if="editingQuery" style="padding-top:1em;"> 
+                <div v-if="editingQuery" class="block"> 
                     <div style="text-align:center">Search by <strong>City, State</strong></div>
                     <form v-on:submit="submitQuery">
                         <div class="field">
@@ -28,32 +28,7 @@
                 </div>
             </div>
             <div v-if="!editingQuery && loadedQuery">
-                <div v-if="data.isAxiosError">
-                    {{data.response.data.message}}
-                </div>
-                <div v-else style="display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
-                
-                    <ul id="example-1" class="level">
-                        <li v-for="item in data.weather" class="level-item has-text-centered" style="display:flex; flex-direction:column;">
-                            
-                            <p class="heading"><img style="margin: -15px 0 -15px 0; opacity:0.7" v-bind:src="'http://openweathermap.org/img/wn/'+item.icon+'@2x.png'" v-bind:title="item.description"></p>
-                            <p class="subtitle is-6" style="white-space:nowrap">{{item.description}}</p>
-                            
-                            
-                        </li>
-                    </ul>
-                    <div>
-                        <div style="display:flex; flex-direction:row; justify-content:center; align-items:baseline;">
-                            <p class="title is-1" style="text-align:center">{{displayTemp(data.main.temp)}}</p>
-                            <p class="subtitle is-4" style="white-space:nowrap; margin-left:5px;">
-                                <a @click="unit = 'F'" v-bind:class="{'selected-unit':unit === 'F'}">ºF</a>
-                                | <a  v-bind:class="{'selected-unit':unit === 'C'}" @click="unit = 'C'">ºC</a>
-                            </p>
-                        </div>
-                        <p class="subtitle is-6" style="text-align:center">(feels like <strong>{{displayTemp(data.main.feels_like)}}º</strong>)</p>
-                    </div>
-                    
-                </div>
+                <CurrentWeather v-bind:weatherData="data.current"></CurrentWeather>
             </div>
         </div>
     </section>
@@ -62,6 +37,7 @@
 <script>
 
 import Spinner from './Spinner.vue';
+import CurrentWeather from './CurrentWeather.vue';
 import OpenWeatherService from './services/OpenWeatherService.js';
 import axios from 'axios';
 import _ from 'lodash';
@@ -69,7 +45,8 @@ import _ from 'lodash';
 export default {
   name:'app',
   components: {
-    Spinner
+    Spinner,
+    CurrentWeather
   },
   data() {
     return { 
@@ -116,20 +93,11 @@ export default {
     toggleQueryInput: function() {
         this.editingQuery = !this.editingQuery;
     },
-    displayTemp: function(temp) {
-        switch(this.unit) {
-        case 'F':
-            return Math.round(((temp - 273.15) * 9/5) + 32)
-        case 'C':
-            return Math.round(temp - 273.15)
-        }
-        return Math.round(temp);
-    },
     queryCurrentWeather: function(city, state) {
         
         this.loadingWeatherData = true;
         OpenWeatherService.queryAll(city, state).then(data => {
-            this.data = data.current;
+            this.data = data
             
             this.loadedQuery = `${city}, ${state}`
               console.log(data);
@@ -157,8 +125,5 @@ export default {
 }
 .hidden {
     opacity:0;
-}
-.selected-unit {
-    font-weight:bold;
 }
 </style>
