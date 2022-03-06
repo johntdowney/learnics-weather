@@ -4,25 +4,27 @@
             {{weatherData.response.data.message}}
         </div>
         <div v-else style="display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
+            <div>
+                <h4 class="subtitle is-7 has-text-centered" style="margin:0;">{{new Date(weatherData.dt * 1000).toLocaleString()}}</h4>
+                <ul class="level">
+                    <li v-for="item in weatherData.weather" class="level-item has-text-centered" style="display:flex; flex-direction:column;">
 
-            <ul id="example-1" class="level">
-                <li v-for="item in weatherData.weather" class="level-item has-text-centered" style="display:flex; flex-direction:column;">
-
-                    <p class="heading"><img style="margin: -15px 0 -15px 0; opacity:0.7" v-bind:src="'http://openweathermap.org/img/wn/'+item.icon+'@2x.png'" v-bind:title="item.description"></p>
-                    <p class="subtitle is-6" style="white-space:nowrap">{{item.description}}</p>
+                        <p class="heading"><img style="margin: -15px 0 -15px 0; opacity:0.7" v-bind:src="'http://openweathermap.org/img/wn/'+item.icon+'@2x.png'" v-bind:title="item.description"></p>
+                        <p class="subtitle is-6" style="white-space:nowrap">{{item.description}}</p>
 
 
-                </li>
-            </ul>
+                    </li>
+                </ul>
+            </div>
             <div>
                 <div style="display:flex; flex-direction:row; justify-content:center; align-items:baseline;">
-                    <p class="title is-1" style="text-align:center">{{displayTemp(weatherData.main.temp)}}</p>
+                    <p class="title is-1 has-text-centered">{{displayTemp(weatherData.main.temp)}}</p>
                     <p class="subtitle is-4" style="white-space:nowrap; margin-left:5px;">
                         <a @click="unit = 'F'" v-bind:class="{'selected-unit':unit === 'F'}">ºF</a>
                         | <a  v-bind:class="{'selected-unit':unit === 'C'}" @click="unit = 'C'">ºC</a>
                     </p>
                 </div>
-                <p class="subtitle is-6" style="text-align:center">(feels like <strong>{{displayTemp(weatherData.main.feels_like)}}º</strong>)</p>
+                <p class="subtitle is-6 has-text-centered">(feels like <strong>{{displayTemp(weatherData.main.feels_like)}}º</strong>)</p>
             </div>
 
         </div>

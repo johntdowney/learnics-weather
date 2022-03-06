@@ -23,7 +23,7 @@
                         </div>
                     </form>
                 </div>
-                <div style="text-align:center; margin:4em" v-if="loadingUserLocation">
+                <div class="has-text-centered" style="margin:4em" v-if="loadingUserLocation">
                     <Spinner class="spinner"></Spinner>
                 </div>
             </div>
@@ -125,5 +125,8 @@ export default {
 }
 .hidden {
     opacity:0;
+}
+.hero a:not(.button) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
 </style>
