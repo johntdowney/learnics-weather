@@ -50,7 +50,6 @@ export default {
 					}
 					currentDay.items.push(result.list[i]);
 				}
-				console.log("modifiedList = ", modifiedList);
 				result.list = modifiedList;
 			}
 

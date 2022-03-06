@@ -29,7 +29,7 @@
                         </p>
                     </form>
                 </div>
-                <div class="has-text-centered" style="margin:4em" v-if="loadingUserLocation">
+                <div class="has-text-centered m-6" v-if="loadingUserLocation">
                     <Spinner class="spinner"></Spinner>
                 </div>
             </div>
@@ -39,9 +39,9 @@
                     <div class="block">
                         <WeatherDetail v-bind:unit="unit" v-bind:weatherData="data.current" v-on:toggle-temp="toggleTempUnit"></WeatherDetail>
                     </div>
-                    <hr>
-                    <h5 class="subtitle is-6 has-text-centered" style="margin:-24px 0 6px 0;">Forecast</h5>
-                    <div class="block" style="display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-around;">
+                    <hr class="mb-1">
+                    <h5 class="subtitle is-6 has-text-centered m-0 mt-4 mb-1">Forecast</h5>
+                    <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-around">
                         <div v-for="day in data.weekly.list" v-bind:key="day.date">
                             <WeatherForecast v-bind:unit="unit" v-bind:weatherData="day.items[0]"></WeatherForecast>
                         </div>
@@ -50,7 +50,7 @@
                 
                     
             </div>
-            <h6 class="has-text-centered subtitle is-6" style="margin-top: 20px;">Powered by <a href="https://openweathermap.org" target="_blank">openweathermap.org</a></h6>
+            <h6 class="has-text-centered subtitle is-6 mt-5">Powered by <a href="https://openweathermap.org" target="_blank">openweathermap.org</a></h6>
         </div>
     </section>
 </template>
@@ -123,6 +123,7 @@ export default {
     queryCurrentWeather: function(city, state) {
         
         this.loadingWeatherData = true;
+        this.errorMessage = '';
         OpenWeatherService.queryAll(city, state).then(data => {
             
 
