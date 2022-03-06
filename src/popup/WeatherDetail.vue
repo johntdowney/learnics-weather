@@ -5,7 +5,7 @@
         </div>
         <div v-else style="display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
             <div>
-                <h4 class="subtitle is-7 has-text-centered" style="margin:0;">{{new Date(weatherData.dt * 1000).toLocaleString()}}</h4>
+                <h4 class="subtitle is-7 has-text-centered" style="margin:0;">{{displayDate(weatherData.dt)}}</h4>
                 <ul class="level">
                     <li v-for="item in weatherData.weather" class="level-item has-text-centered" style="display:flex; flex-direction:column;">
 
@@ -18,10 +18,10 @@
             </div>
             <div>
                 <div style="display:flex; flex-direction:row; justify-content:center; align-items:baseline;">
-                    <p class="title is-1 has-text-centered">{{displayTemp(weatherData.main.temp)}}</p>
+                    <p class="title is-1 has-text-centered" style="margin:0;">{{displayTemp(weatherData.main.temp)}}</p>
                     <p class="subtitle is-4" style="white-space:nowrap; margin-left:5px;">
-                        <a @click="unit = 'F'" v-bind:class="{'selected-unit':unit === 'F'}">ºF</a>
-                        | <a  v-bind:class="{'selected-unit':unit === 'C'}" @click="unit = 'C'">ºC</a>
+                        <a @click="$emit('toggle-temp', 'F')" v-bind:class="{'selected-unit':unit === 'F'}">ºF</a>
+                        | <a  v-bind:class="{'selected-unit':unit === 'C'}" @click="$emit('toggle-temp', 'C')">ºC</a>
                     </p>
                 </div>
                 <p class="subtitle is-6 has-text-centered">(feels like <strong>{{displayTemp(weatherData.main.feels_like)}}º</strong>)</p>
@@ -38,6 +38,7 @@ import OpenWeatherService from './services/OpenWeatherService.js';
 import axios from 'axios';
 import _ from 'lodash';
 
+
 export default {
   name:'app',
   components: {
@@ -45,20 +46,16 @@ export default {
   },
   data() {
     return { 
-        unit:'F',
     }
   },
-  props:['weatherData'],
+  props:['weatherData','unit'],
   methods: {
   
     displayTemp: function(temp) {
-        switch(this.unit) {
-        case 'F':
-            return Math.round(((temp - 273.15) * 9/5) + 32)
-        case 'C':
-            return Math.round(temp - 273.15)
-        }
-        return Math.round(temp);
+        return OpenWeatherService.displayTemp(temp, this.unit);
+    },
+    displayDate: function(date) {
+        return OpenWeatherService.displayDate(date);
     }
   }
   

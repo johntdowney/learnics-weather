@@ -30,8 +30,20 @@
                 </div>
             </div>
             <div v-if="!editingQuery && loadedQuery">
-                <WeatherDetail v-bind:weatherData="data.current"></WeatherDetail>
+                <div class="block">
+                    <WeatherDetail v-bind:unit="unit" v-bind:weatherData="data.current" v-on:toggle-temp="toggleTempUnit"></WeatherDetail>
+                </div>
+                <hr>
+                <h5 class="subtitle is-6 has-text-centered" style="margin:-24px 0 6px 0;">Forecast</h5>
+                <div class="block" style="display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:space-around;">
+                    <div v-for="day in data.weekly.list">
+                        <WeatherForecast v-bind:unit="unit" v-bind:weatherData="day.items[0]"></WeatherForecast>
+                    </div>
+                </div>
+                
+                    
             </div>
+            <h6 class="has-text-centered subtitle is-6" style="margin-top: 20px;">Powered by <a href="https://openweathermap.org" target="_blank">openweathermap.org</a></h6>
         </div>
     </section>
 </template>
@@ -40,6 +52,7 @@
 
 import Spinner from './Spinner.vue';
 import WeatherDetail from './WeatherDetail.vue';
+import WeatherForecast from './WeatherForecast.vue';
 import OpenWeatherService from './services/OpenWeatherService.js';
 import axios from 'axios';
 import _ from 'lodash';
@@ -48,7 +61,8 @@ export default {
   name:'app',
   components: {
     Spinner,
-    WeatherDetail
+    WeatherDetail,
+    WeatherForecast
   },
   data() {
     return { 
@@ -57,7 +71,7 @@ export default {
         loadingWeatherData: true,
         query:'',
         loadedQuery:'',
-        unit:'C',
+        unit:'F',
         submitted:false,
         editingQuery: false,
     }
@@ -83,6 +97,9 @@ export default {
     }
   },
   methods: {
+    toggleTempUnit: function(u) {
+        this.unit = u;
+    },
     submitQuery: function(e) {
         console.log("ON SUBMIT", e);
         e.preventDefault();
