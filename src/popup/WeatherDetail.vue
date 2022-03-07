@@ -1,7 +1,7 @@
 <template>
 <div class="is-flex is-flex-direction-row is-flex-wrap-nowrap is-align-items-center is-justify-content-space-around">
     <div>
-        <h4 class="subtitle is-7 has-text-centered m-0">
+        <h4 class="subtitle is-7 has-text-centered m-0 nowrap">
             {{displayDate(weatherData.dt)}}
         </h4>
         <ul class="level">
@@ -20,7 +20,7 @@
     </div>
     <div>
         <div class="is-flex is-flex-direction-row is-justify-content-center is-align-items-baseline">
-            <p class="title is-1 has-text-centered m-0">
+            <p class="title is-1 has-text-centered m-0 nowrap">
                 {{displayTemp(weatherData.main.temp)}}
             </p>
             <p class="subtitle is-4 nowrap ml-1">

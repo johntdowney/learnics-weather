@@ -1,14 +1,14 @@
 <template>
-<section class="hero is-small is-primary" v-bind:style="{ 'background-image': `url(https://learnics-weather.s3.amazonaws.com/bg/${bgImageType}/${bgImageNo}.jpg)` }">
+<section class="hero is-small is-primary main-app-wrapper" v-bind:style="{ 'background-image': getBackgroundImageUrl() }">
     <div class="hero-body">
         <div>
             <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap">
                 <p class="title is-5 m-0 nowrap">
                     Current Weather
                 </p>
-                <p class="subtitle is-6 has-text-right nowrap m-0 ml-6" 
+                <p class="subtitle is-6 has-text-right nowrap m-0 ml-6 query-input-button" 
                         v-if="!loadingUserLocation">
-                    <a class="query-input-button" 
+                    <a 
                             @click="toggleQueryInput()">
                         {{loadedQuery}}
                     </a>
@@ -72,12 +72,14 @@
                     v-on:toggle-temp="toggleTempUnit"></WeatherDetail>
             
             <hr class="mb-1" />
-            <h5 class="subtitle is-6 has-text-centered m-0 mt-4 mb-1">Forecast</h5>
-            <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-around">
-                <div v-for="day in data.weekly.list" 
-                        v-bind:key="day.date">
-                    <WeatherForecast v-bind:unit="unit" 
-                            v-bind:weatherData="day.items[0]"></WeatherForecast>
+            <div class="forecast-panel">
+                <h5 class="subtitle is-6 has-text-centered m-0 mt-4 mb-1">Forecast</h5>
+                <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-around">
+                    <div v-for="day in data.weekly.list" 
+                            v-bind:key="day.date">
+                        <WeatherForecast v-bind:unit="unit" 
+                                v-bind:weatherData="day.items[0]"></WeatherForecast>
+                    </div>
                 </div>
             </div>
         </div>
@@ -140,6 +142,9 @@ export default {
         }
     },
     methods: {
+        getBackgroundImageUrl: function() {
+            return `url(https://learnics-weather.s3.amazonaws.com/bg-small/${this.data?.current?.weather[0].icon || '01d'}/00.jpg)`;
+        },
         segmentQuery: function() {
             return this.query.trim().split(',').map(e=>e.trim()).filter(e=>e.length>0);
         },
@@ -197,5 +202,24 @@ export default {
 }
 .nowrap {
     white-space:nowrap;
+}
+.main-app-wrapper {
+    transition: background-image 1s;
+}
+.main-app-wrapper > * {
+    background-color:rgba(0, 108, 255, 0.1);
+
+  text-shadow:
+   -0.05em -0.05em 2px #000,  
+    0.05em -0.05em 2px #000,
+    -0.05em 0.05em 2px #000,
+     0.05em 0.05em 2px #000,
+   -0.05em -0.05em 2px #000,  
+    0.05em -0.05em 2px #000,
+    -0.05em 0.05em 2px #000,
+     0.05em 0.05em 2px #000;
+}
+.query-input-button {
+    min-width:100px;
 }
 </style>
