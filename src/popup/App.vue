@@ -1,5 +1,5 @@
 <template>
-<section class="hero is-small is-primary">
+<section class="hero is-small is-primary" v-bind:style="{ 'background-image': `url(https://learnics-weather.s3.amazonaws.com/bg/${bgImageType}/${bgImageNo}.jpg)` }">
     <div class="hero-body">
         <div>
             <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap">
@@ -15,9 +15,11 @@
                 </p>
             </div>
             <div v-if="editingQuery" class="block"> 
-                <h3 class="title is-5 has-text-centered">
-                    Search by <strong>City, State</strong>
-                </h3>
+                <p class="has-text-centered">
+                    Search by <strong>City</strong>,<br/>
+                    <strong>City, State</strong>,<br/>
+                    or  <strong>City, State, Country</strong>
+                </p>
                 <form v-on:submit="submitQuery">
                     <div class="field">
 
@@ -27,12 +29,19 @@
                                 v-model="query" 
                                 type="text" 
                                 autofocus 
-                                placeholder="City, State">
+                                placeholder="City, State, Country">
 
-                        <p class="notification is-danger nowrap has-text-centered"
-                                v-if="submitted && !queryValid"> 
-                            Please use the form <strong>City, State</strong>.
-                        </p>
+                        <div v-if="submitted && !queryValid">
+                            <p class="notification is-danger nowrap has-text-centered"> 
+                                Please, use one of the following 3 forms for your search:<br/>
+                                
+                            </p>
+                            <ul class="has-text-weight-bold">
+                                <li>City</li>
+                                <li>City, State</li>
+                                <li>City, State, Country</li>
+                            </ul>
+                        </div>
 
                     </div>
                     <div class="has-text-centered">
@@ -58,7 +67,9 @@
         <div v-if="!editingQuery && loadedQuery">
 
             
-            <WeatherDetail v-bind:unit="unit" v-bind:weatherData="data.current" v-on:toggle-temp="toggleTempUnit"></WeatherDetail>
+            <WeatherDetail v-bind:unit="unit" 
+                    v-bind:weatherData="data.current" 
+                    v-on:toggle-temp="toggleTempUnit"></WeatherDetail>
             
             <hr class="mb-1" />
             <h5 class="subtitle is-6 has-text-centered m-0 mt-4 mb-1">Forecast</h5>
@@ -78,13 +89,11 @@
 </template>
 
 <script>
-
 import Spinner from './Spinner.vue';
 import WeatherDetail from './WeatherDetail.vue';
 import WeatherForecast from './WeatherForecast.vue';
 import OpenWeatherService from './services/OpenWeatherService.js';
 import axios from 'axios';
-import _ from 'lodash';
 
 export default {
     name:'App',
@@ -104,27 +113,36 @@ export default {
             unit:'F',
             submitted:false,
             editingQuery: false,
+            openWeatherAppId: null
         }
     },
     async mounted() {
         try {
             // Approximate the user's location without having to ask for it.
-            let response = await axios.get('https://geolocation-db.com/json')
+            const p1 = await axios.get('https://geolocation-db.com/json'),
+                // Dynamically load the Open Weather App ID as securely as possible.
+                p2 = await axios.post('https://kwly7hekq8.execute-api.us-east-1.amazonaws.com/default/apiSecureKeys', {});
+            const response = await p1; 
+            const apiKeys = await p2; 
+            this.openWeatherAppId = apiKeys.data.message;
             this.defaultLocation = `${response.data.city}, ${response.data.state}`;
             this.query = this.defaultLocation;
             this.queryCurrentWeather(response.data.city, response.data.state);
         }
-        catch(e) { console.err(e) }
+        catch(e) { console.error(e) }
         finally { this.loadingUserLocation = false }
     },
     watch: {
         query: function() {
             this.submitted = false;
-            let s = this.query.split(',');
-            this.queryValid = s.length == 2 && s[0].trim().length > 0 && s[1].trim().length > 0;
+            const segments = this.segmentQuery()
+            this.queryValid = segments.length>= 0 && segments.length < 4;
         }
     },
     methods: {
+        segmentQuery: function() {
+            return this.query.trim().split(',').map(e=>e.trim()).filter(e=>e.length>0);
+        },
         toggleTempUnit: function(u) {
             this.unit = u;
         },
@@ -134,26 +152,23 @@ export default {
         submitQuery: function(e) {
             e.preventDefault();
             this.submitted = true;
+
             if(this.queryValid) {
-                let s = this.query.split(',');
-                this.queryCurrentWeather(s[0].trim(), s[1].trim());
+                this.queryCurrentWeather(...this.segmentQuery());
             }
         },
         toggleQueryInput: function() {
             this.editingQuery = !this.editingQuery;
         },
-        queryCurrentWeather: function(city, state) {
-
+        queryCurrentWeather: function(city, state, country) {
             this.loadingWeatherData = true;
             this.errorMessage = '';
-            OpenWeatherService.queryAll(city, state).then(data => {
 
-
-
+            OpenWeatherService.queryAll(this.openWeatherAppId, city, state, country).then(data => {
                 if(data && !data.current.isAxiosError) {
                     this.data = data
-                    this.editingQuery = data && data.current.isAxiosError;
-                    this.loadedQuery = `${city}, ${state}`
+                    this.editingQuery = false;
+                    this.loadedQuery = `${city}${state?(', '+state):''}${country?(', '+country):''}`;
                 } else if(data) {
                     this.errorMessage = data.current.response.data.message;
                 } else {
@@ -161,9 +176,8 @@ export default {
                 }
                 console.log(data);
             }).catch(err => {
-                console.err(err);
+                console.error(err);
             }).finally(()=>{
-
                 this.loadingWeatherData = false;
             });
         }

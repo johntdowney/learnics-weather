@@ -1,19 +1,19 @@
 <template>
-    <div>
-        <h4 class="subtitle is-6 has-text-centered mb-1 nowrap">
-            {{displayDate(weatherData.dt)}}
-        </h4>        
-        <div v-for="item in weatherData.weather" 
-                :key="item.id" 
-                class="has-text-centered">
-            <img class="weather-icon-small" 
-                    v-bind:src="'http://openweathermap.org/img/wn/'+item.icon+'.png'" 
-                    v-bind:title="item.description">
-        </div>
-        <p class="subtitle has-text-centered is-6 nowrap">
-            {{displayTemp(weatherData.main.temp)}}º
-        </p>
+<div>
+    <h4 class="subtitle is-6 has-text-centered mb-1 nowrap">
+        {{displayDate(weatherData.dt)}}
+    </h4>        
+    <div v-for="item in weatherData.weather" 
+            :key="item.id" 
+            class="has-text-centered">
+        <img class="weather-icon-small" 
+                v-bind:src="'http://openweathermap.org/img/wn/'+item.icon+'.png'" 
+                v-bind:title="item.description">
     </div>
+    <p class="subtitle has-text-centered is-6 nowrap">
+        {{displayTemp(weatherData.main.temp)}}º
+    </p>
+</div>
 </template>
 
 <script>

@@ -8,7 +8,6 @@
             <li v-for="item in weatherData.weather" 
                     :key="item.id" 
                     class="level-item has-text-centered is-flex is-flex-direction-column">
-
                 <p class="heading">
                     <img class="weather-icon" 
                             v-bind:src="`http://openweathermap.org/img/wn/${item.icon}@2x.png`" 
@@ -36,7 +35,6 @@
             (feels like <strong>{{displayTemp(weatherData.main.feels_like)}}º</strong>)
         </p>
     </div>
-
 </div>
 </template>
 
@@ -61,6 +59,7 @@ export default {
 .selected-unit {
     font-weight:bold;
 }
+
 .weather-icon {
     margin: -15px 0 -15px 0;
     opacity:0.7;
