@@ -1,4 +1,9 @@
 {
-  "presets": ["@babel/preset-env"],
-    "plugins": ["transform-regenerator"]
+    "presets": [["@babel/preset-env", {targets: {node: "current"}}], "@vue/cli-plugin-babel/preset"],
+    "plugins": ["transform-regenerator"],
+    "env": {
+        "test": {
+          "plugins": ["@babel/plugin-transform-runtime"]
+        }
+    }
 }

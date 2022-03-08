@@ -1,57 +1,43 @@
 <template>
-    <div>
-        <div v-if="weatherData.isAxiosError">
-            {{weatherData.response.data.message}}
-        </div>
-        <div v-else style="display:flex; flex-direction:row; justify-content:space-around; align-items:center;">
-            <div>
-                <h4 class="subtitle is-6 has-text-centered" style="white-space:nowrap; margin-bottom:4px;">{{displayDate(weatherData.dt)}}</h4>
-                
-                <div v-for="item in weatherData.weather" class="has-text-centered">
-                    <img style="margin: -15px 0 -15px 0; opacity:0.7" 
-                        v-bind:src="'http://openweathermap.org/img/wn/'+item.icon+'.png'" 
-                        v-bind:title="item.description">
-                </div>
-                <p class="subtitle has-text-centered is-6" style="white-space:nowrap">{{displayTemp(weatherData.main.temp)}}º</p>
-            </div>
-
-        </div>
-    </div>
+<div>
+    <h4 class="is-size-6 has-text-weight-bold has-text-centered mb-1 nowrap">
+        {{displayDate(weatherData.dt)}}
+    </h4>
+    <WeatherCondition :code="weatherData.weather[0].icon" :size="40"></WeatherCondition>
+    <p class="has-text-centered is-size-6 has-text-weight-bold nowrap">
+        {{displayTemp(weatherData.main.temp)}}º
+    </p>
+</div>
 </template>
 
 <script>
-
-import Spinner from './Spinner.vue';
 import OpenWeatherService from './services/OpenWeatherService.js';
-import axios from 'axios';
-import _ from 'lodash';
-
+import WeatherCondition from './WeatherCondition.vue';
 const DAYS = ['Mon','Tues','Wed','Thu','Fri','Sat','Sun'];
-export default {
-  name:'app',
-  components: {
-    
-  },
-  data() {
-    return { 
-    }
-  },
-  props:['weatherData', 'unit'],
-  methods: {
-  
-    displayTemp: function(temp) {
-        return OpenWeatherService.displayTemp(temp, this.unit);
-    },
-    
-    displayDate: function(date) {
-        return DAYS[new Date(date * 1000).getDay()];
-    }
-  }
-  
 
+export default {
+    name:'WeatherForecast',
+    props: ['weatherData', 'unit'],
+    components: {
+        WeatherCondition
+    },
+    methods: {
+        displayTemp: function(temp) {
+            return OpenWeatherService.displayTemp(temp, this.unit);
+        },
+        displayDate: function(date) {
+            let d = new Date(date * 1000).toLocaleDateString('en-US', { weekday: 'long' });
+            if(d === 'Tuesday') d = d.substring(0, 4);
+            else d = d.substring(0, 3);
+            return d;
+        }
+    }
 }
 </script>
 
 <style lang="sass">
-
+.weather-icon-small {
+    margin: -15px 0 -15px 0; 
+    opacity:0.7;
+}
 </style>

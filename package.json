@@ -1,8 +1,8 @@
 {
   "author": {
-    "email": "mubaidr@gmail.com",
-    "name": "Muhammad Ubaid Raza",
-    "url": "https://mubaidr.github.io/"
+    "email": "johntdowney@gmail.com",
+    "name": "John T. Downey",
+    "url": "https://github.com/johntdowney"
   },
   "dependencies": {
     "axios": "^0.26.0",
@@ -11,9 +11,11 @@
   },
   "description": "A simple Chrome extension to display information about the current weather for the city that was entered.  Originally built from Muhammad Ubaid Raza's vue-chrome-extension-boilerplate at https://mubaidr.github.io/ as part of a take-home exam as part of the hiring process of Learnics.",
   "devDependencies": {
+    "core-js": "^3.21.1",
     "@babel/core": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
     "archiver": "^4.0.2",
+    "babel-jest": "^27.5.1",
     "babel-loader": "^8.1.0",
     "babel-plugin-transform-regenerator": "^6.26.0",
     "babel-polyfill": "^6.26.0",
@@ -29,16 +31,23 @@
     "eslint-plugin-vue": "^6.2.2",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
+    "jest": "^27.5.1",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.2",
     "script-ext-html-webpack-plugin": "^2.1.4",
     "style-loader": "^1.2.1",
+    "trace-unhandled": "^2.0.1",
     "vue-loader": "^15.9.3",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
-    "webpack-extension-reloader": "^1.1.4"
+    "webpack-extension-reloader": "^1.1.4",
+    "@vue/cli-plugin-babel": "4.4.4",
+    "@vue/cli-plugin-eslint": "4.1.2",
+    "@vue/cli-plugin-unit-jest": "4.0.0",
+    "@vue/cli-service": "~4.0.0",
+    "@vue/test-utils": "1.0.0-beta.29"
   },
   "license": "MIT",
   "name": "vue-chrome-extension-boilerplate",
@@ -50,9 +59,11 @@
     "build": "npm run pack && npm run remove-evals && npm run zip",
     "dev": "webpack --mode=development --env.NODE_ENV=development --progress --hide-modules --hot --watch",
     "lint": "eslint --ext .js,.vue --fix ./src",
+    "test": "jest",
     "pack": "webpack --mode=production --env.NODE_ENV=production --progress --hide-modules",
     "remove-evals": "node scripts/remove-evals.js",
-    "zip": "node scripts/build-zip.js"
+    "zip": "node scripts/build-zip.js",
+    "test:unit": "vue-cli-service test:unit --coverage"
   },
   "version": "1.0.0"
 }
