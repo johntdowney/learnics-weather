@@ -11,13 +11,9 @@
   },
   "description": "A simple Chrome extension to display information about the current weather for the city that was entered.  Originally built from Muhammad Ubaid Raza's vue-chrome-extension-boilerplate at https://mubaidr.github.io/ as part of a take-home exam as part of the hiring process of Learnics.",
   "devDependencies": {
+    "core-js": "^3.21.1",
     "@babel/core": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
-    "@vue/cli-plugin-babel": "4.4.4",
-    "@vue/cli-plugin-eslint": "4.1.2",
-    "@vue/cli-plugin-unit-jest": "4.0.0",
-    "@vue/cli-service": "~4.0.0",
-    "@vue/test-utils": "1.0.0-beta.29",
     "archiver": "^4.0.2",
     "babel-jest": "^27.5.1",
     "babel-loader": "^8.1.0",
@@ -46,7 +42,12 @@
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12",
-    "webpack-extension-reloader": "^1.1.4"
+    "webpack-extension-reloader": "^1.1.4",
+    "@vue/cli-plugin-babel": "4.4.4",
+    "@vue/cli-plugin-eslint": "4.1.2",
+    "@vue/cli-plugin-unit-jest": "4.0.0",
+    "@vue/cli-service": "~4.0.0",
+    "@vue/test-utils": "1.0.0-beta.29"
   },
   "license": "MIT",
   "name": "vue-chrome-extension-boilerplate",
@@ -63,26 +64,6 @@
     "remove-evals": "node scripts/remove-evals.js",
     "zip": "node scripts/build-zip.js",
     "test:unit": "vue-cli-service test:unit --coverage"
-  },
-  "jest": {
-    "modulePaths": [
-      "/shared/vendor/modules"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "jsx"
-    ],
-    "moduleDirectories": [
-      "node_modules",
-      "bower_components",
-      "shared"
-    ],
-    "moduleNameMapper": {
-      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
-      "\\.(gif|ttf|eot|svg)$": "<rootDir>/__mocks__/fileMock.js",
-      "^react(.*)$": "<rootDir>/vendor/react-master$1",
-      "^config$": "<rootDir>/configs/app-config.js"
-    }
   },
   "version": "1.0.0"
 }

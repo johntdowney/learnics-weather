@@ -17,6 +17,7 @@
 
 <script>
 export default {
+  name: "OptionsRoot",
   data() {
     return {
       msg: 'Welcome!',
