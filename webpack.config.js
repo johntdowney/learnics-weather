@@ -38,6 +38,7 @@ function configFunc(env, argv) {
           test: /\.js$/,
           loader: 'babel-loader',
           exclude: /(node_modules|bower_components)/,
+          include: path.resolve(__dirname, "src"),
         },
         {
           test: /\.scss$/,
@@ -72,7 +73,7 @@ function configFunc(env, argv) {
     resolve: {
       alias: {
         vue$: 'vue/dist/vue.runtime.esm.js',
-        bulma$: 'bulma/css/bulma.css',
+        bulma$: 'bulma/css/bulma.css'
       },
       // extensions: ['.js'],
     },

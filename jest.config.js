@@ -1,18 +1,8 @@
 module.exports = {
     preset: "@vue/cli-plugin-unit-jest",
     collectCoverage: true,
-    coverageReporters: [
-        "lcov"
-    ],
-    collectCoverageFrom: [
-        "src/**/*.{js,vue}",
-        "!src/main.js",
-        "!src/utils/utils.js",
-        "!src/documentation/process_doc.js",
-        "!src/store/index.js",
-        "!src/plugins/**",
-        "!src/router/routes.js"
-    ],
+    coverageReporters: ["lcov", "text"], // use "text-summary" for a less verbose output
+    collectCoverageFrom: ["src/**/*.{js,vue}"],
     testMatch: [
         "**/**.spec.js", "**/**/**.spec.js", "tests/**/**.spec.js", "tests/**/**/**.spec.js"
     ],
@@ -21,5 +11,5 @@ module.exports = {
       "trace-unhandled/register"
     ],
     transform: { '^.*\\.js$': 'babel-jest' },
-    transformIgnorePatterns: ['node_modules/(?!vue-router|@babel|vuetify|particles.vue)']
+    transformIgnorePatterns: ['node_modules/(?!vue-router|@babel|vuetify)']
 };
