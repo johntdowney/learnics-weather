@@ -5782,6 +5782,14 @@
   "resolved" "https://registry.npmjs.org/for-in/-/for-in-1.0.2.tgz"
   "version" "1.0.2"
 
+"foreground-child@^2.0.0":
+  "integrity" "sha512-dCIq9FpEcyQyXKCkyzmlPTFNgrCzPudOe+mhvJU5zAtlBnGVy2yKxtfsxK2tQBThwq225jcvBjpw1Gr40uzZCA=="
+  "resolved" "https://registry.npmjs.org/foreground-child/-/foreground-child-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "cross-spawn" "^7.0.0"
+    "signal-exit" "^3.0.2"
+
 "forever-agent@~0.6.1":
   "integrity" "sha1-+8cfDEGt6zf5bFd60e1C2P2sypE="
   "resolved" "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
@@ -6287,6 +6295,14 @@
   dependencies:
     "inherits" "^2.0.3"
     "minimalistic-assert" "^1.0.1"
+
+"haxec@^2.0.1":
+  "integrity" "sha512-2DaSqGZIzgVkZ4YFHbk9Su0Q6gm7YbzNX9njOHK/D/XklOdvgTemsPmjcyExlLdkl7lRlNIW0Wxo6niVfpWedw=="
+  "resolved" "https://registry.npmjs.org/haxec/-/haxec-2.0.1.tgz"
+  "version" "2.0.1"
+  dependencies:
+    "foreground-child" "^2.0.0"
+    "spawn-wrap" "^2.0.0"
 
 "he@^1.1.0", "he@^1.2.0", "he@1.2.x":
   "integrity" "sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw=="
@@ -11452,6 +11468,18 @@
   "resolved" "https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz"
   "version" "0.6.1"
 
+"spawn-wrap@^2.0.0":
+  "integrity" "sha512-EeajNjfN9zMnULLwhZZQU3GWBoFNkbngTUPfaawT4RkMiviTxcX0qfhVbGey39mfctfDHkWtuecgQ8NJcyQWHg=="
+  "resolved" "https://registry.npmjs.org/spawn-wrap/-/spawn-wrap-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "foreground-child" "^2.0.0"
+    "is-windows" "^1.0.2"
+    "make-dir" "^3.0.0"
+    "rimraf" "^3.0.0"
+    "signal-exit" "^3.0.2"
+    "which" "^2.0.1"
+
 "spdx-correct@^3.0.0":
   "integrity" "sha512-lr2EZCctC2BNR7j7WzJ2FpDznxky1sjfxvvYEyzxNyb6lZXHODmEoJeFu4JupYlkfha1KZpJyoqiJ7pgA1qq8Q=="
   "resolved" "https://registry.npmjs.org/spdx-correct/-/spdx-correct-3.1.0.tgz"
@@ -12203,6 +12231,13 @@
   "version" "2.1.0"
   dependencies:
     "punycode" "^2.1.1"
+
+"trace-unhandled@^2.0.1":
+  "integrity" "sha512-wOZbhBiNyuZTs0b/ADZFTiTDVVDsvKQj/RkVJTKefH6u9CowGDSR+H/3miaGUrYCCuzS0nVmIzpbIIm6lRF8gg=="
+  "resolved" "https://registry.npmjs.org/trace-unhandled/-/trace-unhandled-2.0.1.tgz"
+  "version" "2.0.1"
+  dependencies:
+    "haxec" "^2.0.1"
 
 "tryer@^1.0.1":
   "integrity" "sha512-c3zayb8/kWWpycWYg87P71E1S1ZL6b6IJxfb5fvsUgsf0S2MVGaDhDXXjDMpdCpfWXqptc+4mXwmiy1ypXqRAA=="
