@@ -1,8 +1,8 @@
 {
   "author": {
-    "email": "mubaidr@gmail.com",
-    "name": "Muhammad Ubaid Raza",
-    "url": "https://mubaidr.github.io/"
+    "email": "johntdowney@gmail.com",
+    "name": "John T. Downey",
+    "url": "https://github.com/johntdowney"
   },
   "dependencies": {
     "axios": "^0.26.0",
@@ -29,6 +29,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
+    "jest": "^27.5.1",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.2",
     "script-ext-html-webpack-plugin": "^2.1.4",
@@ -50,9 +51,24 @@
     "build": "npm run pack && npm run remove-evals && npm run zip",
     "dev": "webpack --mode=development --env.NODE_ENV=development --progress --hide-modules --hot --watch",
     "lint": "eslint --ext .js,.vue --fix ./src",
+    "test": "jest",
     "pack": "webpack --mode=production --env.NODE_ENV=production --progress --hide-modules",
     "remove-evals": "node scripts/remove-evals.js",
     "zip": "node scripts/build-zip.js"
   },
+    
+  "jest": {
+    "modulePaths": ["/shared/vendor/modules"],
+    "moduleFileExtensions": ["js", "jsx"],
+    "moduleDirectories": ["node_modules", "bower_components", "shared"],
+
+    "moduleNameMapper": {
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
+      "\\.(gif|ttf|eot|svg)$": "<rootDir>/__mocks__/fileMock.js",
+
+      "^react(.*)$": "<rootDir>/vendor/react-master$1",
+      "^config$": "<rootDir>/configs/app-config.js"
+    }
+  }
   "version": "1.0.0"
 }
