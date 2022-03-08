@@ -3,17 +3,20 @@
     <div class="hero-body">
         <div>
             <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap">
-                <p class="title is-5 m-0 nowrap">
-                    Current Weather
+                <p class="title is-5 m-0 nowrap is-flex-grow-1">
+                    Weathrics
                 </p>
-                <p class="subtitle is-6 has-text-right nowrap m-0 ml-6 query-input-button" 
+                <p class="subtitle is-5 has-text-right nowrap m-0 ml-6 query-input-button" 
                         v-if="!loadingUserLocation">
-                    <a 
-                            @click="toggleQueryInput()">
+                    <a @click="toggleQueryInput()">
                         {{loadedQuery}}
                     </a>
                 </p>
             </div>
+            <div v-if="failedToLoadAPIKey" class="has-text-centered notification is-danger">
+                There was a problem loading your credentials.  Please try again later and 
+                <a href="mailto:johntdowney@gmail.com">contact support</a> if this issue persists.
+            </div> 
             <div v-if="editingQuery" class="block"> 
                 <p class="has-text-centered">
                     Search by <strong>City</strong>,<br/>
@@ -22,9 +25,8 @@
                 </p>
                 <form v-on:submit="submitQuery">
                     <div class="field">
-
                         <input class="input" 
-                                :disabled="!defaultLocation || loadingWeatherData" 
+                                :disabled="loadingWeatherData" 
                                 v-bind:class="{'is-danger':!queryValid}" 
                                 v-model="query" 
                                 type="text" 
@@ -33,8 +35,7 @@
 
                         <div v-if="submitted && !queryValid">
                             <p class="notification is-danger nowrap has-text-centered"> 
-                                Please, use one of the following 3 forms for your search:<br/>
-                                
+                                Please, use one of the following 3 forms for your search:
                             </p>
                             <ul class="has-text-weight-bold">
                                 <li>City</li>
@@ -60,31 +61,27 @@
                 </form>
             </div>
             <div class="has-text-centered m-6" 
-                    v-if="loadingUserLocation">
+                    v-if="loadingUserLocation && !failedToLoadAPIKey">
                 <Spinner class="spinner"></Spinner>
             </div>
         </div>
         <div v-if="!editingQuery && loadedQuery">
-
-            
             <WeatherDetail v-bind:unit="unit" 
                     v-bind:weatherData="data.current" 
                     v-on:toggle-temp="toggleTempUnit"></WeatherDetail>
-            
-            <hr class="mb-1" />
-            <div class="forecast-panel">
-                <h5 class="subtitle is-6 has-text-centered m-0 mt-4 mb-1">Forecast</h5>
-                <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-around">
+            <div class="mt-3">
+                <div class="has-text-centered m-0 is-uppercase"><strong>Forecast</strong></div>
+                <div class="forecast-list block is-flex is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-around">
                     <div v-for="day in data.weekly.list" 
                             v-bind:key="day.date">
                         <WeatherForecast v-bind:unit="unit" 
-                                v-bind:weatherData="day.items[0]"></WeatherForecast>
+                                v-bind:weatherData="day.items[Math.floor(day.items.length/2)]"></WeatherForecast>
                     </div>
                 </div>
             </div>
         </div>
         <h6 class="has-text-centered subtitle is-6 mt-5">
-            Powered by <a href="https://openweathermap.org" target="_blank">openweathermap.org</a>.
+            Powered by<br><a class="has-text-weight-bold" href="https://openweathermap.org" target="_blank">openweathermap.org</a>
         </h6>
     </div>
 </section>
@@ -110,29 +107,40 @@ export default {
             defaultLocation: null,
             loadingUserLocation: true,
             loadingWeatherData: true,
+            failedToLoadAPIKey:false,
             query:'',
             loadedQuery:'',
             unit:'F',
             submitted:false,
             editingQuery: false,
-            openWeatherAppId: null
+            openWeatherAppId: null,
+            queryValid:false
         }
     },
     async mounted() {
+
         try {
-            // Approximate the user's location without having to ask for it.
-            const p1 = await axios.get('https://geolocation-db.com/json'),
-                // Dynamically load the Open Weather App ID as securely as possible.
-                p2 = await axios.post('https://kwly7hekq8.execute-api.us-east-1.amazonaws.com/default/apiSecureKeys', {});
-            const response = await p1; 
-            const apiKeys = await p2; 
-            this.openWeatherAppId = apiKeys.data.message;
+            const apiKeys = await axios.post('https://kwly7hekq8.execute-api.us-east-1.amazonaws.com/default/apiSecureKeys', {});
+            this.openWeatherAppId = apiKeys?.data?.message;
+        } catch(e) { 
+            this.failedToLoadAPIKey = true;
+            console.error(e)
+            return;
+        }
+
+        try {
+            const response = await axios.get('https://geolocation-db.com/json');
             this.defaultLocation = `${response.data.city}, ${response.data.state}`;
             this.query = this.defaultLocation;
             this.queryCurrentWeather(response.data.city, response.data.state);
+        } catch(e) { 
+            this.errorMessage = e;
+            this.editingQuery = true;
+            this.loadingWeatherData = false;
+            console.error(e)
         }
-        catch(e) { console.error(e) }
         finally { this.loadingUserLocation = false }
+
     },
     watch: {
         query: function() {
@@ -152,7 +160,7 @@ export default {
             this.unit = u;
         },
         isSubmitEnabled: function() {
-            return (this.submitted && (!this.queryValid || this.data.current.isAxiosError)) || this.loadingWeatherData;
+            return (this.submitted && (!this.queryValid || this.data?.current?.isAxiosError)) || this.loadingWeatherData;
         },
         submitQuery: function(e) {
             e.preventDefault();
@@ -194,31 +202,46 @@ export default {
 .spinner {
     transition: opacity 0.5s;
 }
+
 .hidden {
     opacity:0;
 }
+
 .hero a:not(.button) {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    border-bottom: none;
 }
+
+.hero a:not(.button):hover {
+    text-decoration:underline;
+}
+
 .nowrap {
     white-space:nowrap;
 }
+
 .main-app-wrapper {
     transition: background-image 1s;
+    background-size: cover;
 }
+
 .main-app-wrapper > * {
     background-color:rgba(0, 108, 255, 0.1);
-
-  text-shadow:
-   -0.05em -0.05em 2px #000,  
-    0.05em -0.05em 2px #000,
-    -0.05em 0.05em 2px #000,
-     0.05em 0.05em 2px #000,
-   -0.05em -0.05em 2px #000,  
-    0.05em -0.05em 2px #000,
-    -0.05em 0.05em 2px #000,
-     0.05em 0.05em 2px #000;
+    text-shadow:
+    -0.05em -0.05em 1px #000,  
+    0.05em -0.05em 1px #000,
+    -0.05em 0.05em 1px #000,
+    0.05em 0.05em 1px #000,
+    -0.05em -0.05em 1px #000,  
+    0.05em -0.05em 1px #000,
+    -0.05em 0.05em 1px #000,
+    0.05em 0.05em 1px #000;
 }
+.forecast-list {
+    background-color: rgba(0,0,0,0.75);
+    padding: 0.5em;
+    border-radius: 0.25em;
+}
+
 .query-input-button {
     min-width:100px;
 }

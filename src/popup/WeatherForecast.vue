@@ -1,16 +1,10 @@
 <template>
 <div>
-    <h4 class="subtitle is-6 has-text-centered mb-1 nowrap">
+    <h4 class="is-size-6 has-text-weight-bold has-text-centered mb-1 nowrap">
         {{displayDate(weatherData.dt)}}
-    </h4>        
-    <div v-for="item in weatherData.weather" 
-            :key="item.id" 
-            class="has-text-centered">
-        <img class="weather-icon-small" 
-                v-bind:src="'http://openweathermap.org/img/wn/'+item.icon+'.png'" 
-                v-bind:title="item.description">
-    </div>
-    <p class="subtitle has-text-centered is-6 nowrap">
+    </h4>
+    <WeatherCondition :code="weatherData.weather[0].icon" :size="40"></WeatherCondition>
+    <p class="has-text-centered is-size-6 has-text-weight-bold nowrap">
         {{displayTemp(weatherData.main.temp)}}º
     </p>
 </div>
@@ -18,17 +12,24 @@
 
 <script>
 import OpenWeatherService from './services/OpenWeatherService.js';
+import WeatherCondition from './WeatherCondition.vue';
 const DAYS = ['Mon','Tues','Wed','Thu','Fri','Sat','Sun'];
 
 export default {
     name:'WeatherForecast',
     props: ['weatherData', 'unit'],
+    components: {
+        WeatherCondition
+    },
     methods: {
         displayTemp: function(temp) {
             return OpenWeatherService.displayTemp(temp, this.unit);
         },
         displayDate: function(date) {
-            return DAYS[new Date(date * 1000).getDay()];
+            let d = new Date(date * 1000).toLocaleDateString('en-US', { weekday: 'long' });
+            if(d === 'Tuesday') d = d.substring(0, 4);
+            else d = d.substring(0, 3);
+            return d;
         }
     }
 }
