@@ -1,5 +1,6 @@
 <template>
-<section class="hero is-small is-primary main-app-wrapper" v-bind:style="{ 'background-image': getBackgroundImageUrl() }">
+<section class="hero is-small is-primary main-app-wrapper" 
+        v-bind:style="{ 'background-image': getBackgroundImageUrl() }">
     <div class="hero-body">
         <div>
             <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap">
@@ -81,7 +82,12 @@
             </div>
         </div>
         <h6 class="has-text-centered subtitle is-6 mt-5">
-            Powered by<br><a class="has-text-weight-bold" href="https://openweathermap.org" target="_blank">openweathermap.org</a>
+            Powered by<br>
+            <a class="has-text-weight-bold" 
+                    href="https://openweathermap.org" 
+                    target="_blank">
+                openweathermap.org
+            </a>
         </h6>
     </div>
 </section>
@@ -94,6 +100,15 @@ import WeatherForecast from './WeatherForecast.vue';
 import OpenWeatherService from './services/OpenWeatherService.js';
 import axios from 'axios';
 
+const SLIDESHOW_INTERVAL_SECONDS = 25;
+// A cache of object URLS to prevent flicker during the background image slide show.
+const PHOTO_CACHE = {}
+// A map of the number of photos available for each weather condition code.
+const PHOTOS = {
+    '01d':8,'01n':7, '02d':2,'02n':3, '03d':4,'03n':3, '04d':4,'04n':4, '09d':3,
+    '09n':4, '10d':1,'10n':3, '11d':4,'11n':7, '13d':4,'13n':2, '50d':8, '50n':5 
+}
+
 export default {
     name:'App',
     components: {
@@ -104,13 +119,13 @@ export default {
     data() {
         return { 
             errorMessage:'',
-            defaultLocation: null,
             loadingUserLocation: true,
             loadingWeatherData: true,
             failedToLoadAPIKey:false,
             query:'',
             loadedQuery:'',
             unit:'F',
+            loadedPhoto:0,
             submitted:false,
             editingQuery: false,
             openWeatherAppId: null,
@@ -130,8 +145,7 @@ export default {
 
         try {
             const response = await axios.get('https://geolocation-db.com/json');
-            this.defaultLocation = `${response.data.city}, ${response.data.state}`;
-            this.query = this.defaultLocation;
+            this.query = `${response.data.city}, ${response.data.state}`;
             this.queryCurrentWeather(response.data.city, response.data.state);
         } catch(e) { 
             this.errorMessage = e;
@@ -142,6 +156,13 @@ export default {
         finally { this.loadingUserLocation = false }
 
     },
+    created() {
+        setInterval(()=>{
+            if(!this.data?.current?.weather) return;
+            let newPhotoNo = Math.floor(Math.random() * PHOTOS[this.data.current.weather[0].icon])
+            this.updatePhoto(newPhotoNo)
+        }, SLIDESHOW_INTERVAL_SECONDS * 1000)
+    },
     watch: {
         query: function() {
             this.submitted = false;
@@ -150,8 +171,20 @@ export default {
         }
     },
     methods: {
+        updatePhoto: function(newPhotoNo) {
+            let newUrl = `${this.data?.current?.weather[0].icon || '01d'}/0${newPhotoNo}.jpg`;
+            if(!PHOTO_CACHE[newUrl]) {
+                fetch(`https://learnics-weather.s3.amazonaws.com/bg-small/${newUrl}`).then(resp=>resp.blob()).then((blob)=> {
+                    PHOTO_CACHE[newUrl] = URL.createObjectURL(blob)
+                    this.loadedPhoto = newPhotoNo
+                });
+            } else {
+                this.loadedPhoto = newPhotoNo
+            }
+        },
         getBackgroundImageUrl: function() {
-            return `url(https://learnics-weather.s3.amazonaws.com/bg-small/${this.data?.current?.weather[0].icon || '01d'}/00.jpg)`;
+            const filePath = `${this.data?.current?.weather[0].icon || '01d'}/0${this.loadedPhoto}.jpg`;
+            return 'url(' + (PHOTO_CACHE[filePath] || `https://learnics-weather.s3.amazonaws.com/bg-small/${filePath}`) + ')';
         },
         segmentQuery: function() {
             return this.query.trim().split(',').map(e=>e.trim()).filter(e=>e.length>0);
@@ -182,6 +215,7 @@ export default {
                     this.data = data
                     this.editingQuery = false;
                     this.loadedQuery = `${city}${state?(', '+state):''}${country?(', '+country):''}`;
+                    this.updatePhoto(Math.floor(Math.random() * PHOTOS[this.data.current.weather[0].icon]))
                 } else if(data) {
                     this.errorMessage = data.current.response.data.message;
                 } else {
@@ -220,7 +254,8 @@ export default {
 }
 
 .main-app-wrapper {
-    transition: background-image 1s;
+    transition: background-image 5s;
+    -webkit-transform: translate3d(0,0,0);
     background-size: cover;
 }
 
