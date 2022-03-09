@@ -145,6 +145,11 @@ export default {
 
         try {
             const response = await axios.get('https://geolocation-db.com/json');
+            response.data.city = null;
+            response.data.state = null;
+            if(!response.data.city || !response.data.state) {
+                throw "There was a problem loading your location.  Please try again later."
+            }
             this.query = `${response.data.city}, ${response.data.state}`;
             this.queryCurrentWeather(response.data.city, response.data.state);
         } catch(e) { 
