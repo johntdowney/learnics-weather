@@ -39,6 +39,16 @@ Run Jest unit tests:
 
 `npm run test:unit`
 
+## General Installation Instructions:
+
+1. Navigate to the project folder in terminal run `npm install`.
+2. Once installation is complete, run `npm run dev`.
+3. Open Chrome and navigate to the the extensions page (`chrome://extensions/`)
+4. Turn on Developer Mode.
+5. A new menu should appear at the top left with three options: `Load Unpacked`, `Pack Extension`, `Update`.  Select `Load Unpacked`.
+6. Now navigate to the project folder.  Select the dist folder.  This is the "unpacked" folder.
+7. You should be done now.  Just make sure everything is toggled on and don't forget that you need to pin it to your toolbar before it shows up in your toolbar, even though it's on.
+
 ## Contributors ✨
 
 This project was originally built starting with [Muhammad Ubaid Raza's](https://github.com/mubaidr) "[Boilerplate for Chrome extension using Vue.js and Webpack with hot-reload enabled](https://github.com/mubaidr/vue-chrome-extension-boilerplate)"
