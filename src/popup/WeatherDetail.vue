@@ -67,7 +67,10 @@ import WeatherCondition from './WeatherCondition.vue';
 
 export default {
     name:'WeatherDetail',
-    props: ['weatherData','unit'],
+    props: {
+        weatherData: Object,
+        unit: String
+    },
     components: {
         WeatherCondition
     },
