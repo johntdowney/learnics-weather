@@ -107,8 +107,9 @@ const PHOTOS = {
     '01d':8,'01n':7, '02d':2,'02n':3, '03d':4,'03n':3, '04d':4,'04n':4, '09d':3,
     '09n':4, '10d':1,'10n':3, '11d':4,'11n':7, '13d':4,'13n':2, '50d':8, '50n':5 
 }
-const S3_BUCKET_URL = 'https://learnics-weather.s3.amazonaws.com';
-const API_GATEWAY_URL = 'https://kwly7hekq8.execute-api.us-east-1.amazonaws.com/default/apiSecureKeys';
+const S3_BUCKET_URL = 'https://learnics-weather.s3.amazonaws.com',
+    API_GATEWAY_URL = 'https://kwly7hekq8.execute-api.us-east-1.amazonaws.com/default/apiSecureKeys',
+    GEO_API_URL = 'https://geolocation-db.com/json';
 
 export default {
     name:'App',
@@ -146,7 +147,7 @@ export default {
         }
 
         try {
-            const response = await axios.get('https://geolocation-db.com/json');
+            const response = await axios.get(GEO_API_URL);
             if(!response.data.city || !response.data.state) {
                 throw "There was a problem loading your location.  Please try again later."
             }
@@ -191,7 +192,7 @@ export default {
         updatePhoto: function(newPhotoNo) {
             let newUrl = `${this.data?.current?.weather[0].icon || '01d'}/0${newPhotoNo}.jpg`;
             if(!this.photoCache[newUrl]) {
-                fetch(`https://learnics-weather.s3.amazonaws.com/bg-small/${newUrl}`).then(resp=>resp.blob()).then((blob)=> {
+                fetch(`${S3_BUCKET_URL}/bg-small/${newUrl}`).then(resp=>resp.blob()).then((blob)=> {
                     this.photoCache[newUrl] = URL.createObjectURL(blob)
                     this.loadedPhoto = newPhotoNo
                 });
