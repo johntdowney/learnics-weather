@@ -1,8 +1,10 @@
-# vue-chrome-extension-boilerplate
+# learnics-weather
 
-![Node.js CI](https://github.com/mubaidr/vue-chrome-extension-boilerplate/workflows/Node.js%20CI/badge.svg)[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+![Node.js CI](https://github.com/johntdowney/learnics-weather/workflows/Node.js%20CI/badge.svg)[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
-Boilerplate for Chrome extension using Vue.js and Webpack with hot-reload enabled.
+Simple Chome extension to display information about the current weather for a given city, state, country query, built with Vue.js for the "Learnics Take Home Assessment" as part of the hiring process for [Learnics](https://www.learnics.com). 
+
+This project was originally built starting with [Muhammad Ubaid Raza's](https://github.com/mubaidr) "[Boilerplate for Chrome extension using Vue.js and Webpack with hot-reload enabled](https://github.com/mubaidr/vue-chrome-extension-boilerplate)"
 
 ## Scripts
 
@@ -21,6 +23,10 @@ Build extension zip:
 Lint all source files:
 
 `npm run lint`
+
+Run Jest unit tests:
+
+`npm run test:unit`
 
 ## Contributors ✨
 
