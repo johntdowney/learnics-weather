@@ -171,7 +171,7 @@ export default {
     watch: {
         query: function() {
             this.submitted = false;
-            const segments = this.segmentQuery()
+            const segments = this.segmentQuery
             this.queryValid = segments.length>= 0 && segments.length < 4;
         }
     },
@@ -183,6 +183,9 @@ export default {
         isSubmitEnabled() {
             return (this.submitted && (!this.queryValid || this.data?.current?.isAxiosError)) || this.loadingWeatherData;
         },
+        segmentQuery() {
+            return this.query.trim().split(',').map(e=>e.trim()).filter(e=>e.length>0);
+        }
     },
     methods: {
         updatePhoto: function(newPhotoNo) {
@@ -196,9 +199,6 @@ export default {
                 this.loadedPhoto = newPhotoNo
             }
         },
-        segmentQuery: function() {
-            return this.query.trim().split(',').map(e=>e.trim()).filter(e=>e.length>0);
-        },
         toggleTempUnit: function(u) {
             this.unit = u;
         },
@@ -207,7 +207,7 @@ export default {
             this.submitted = true;
 
             if(this.queryValid) {
-                this.queryCurrentWeather(...this.segmentQuery());
+                this.queryCurrentWeather(...this.segmentQuery);
             }
         },
         toggleQueryInput: function() {
