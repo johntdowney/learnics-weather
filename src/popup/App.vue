@@ -229,7 +229,6 @@ export default {
                 } else {
                     this.errorMessage = "Unexpected error.  Please check your internet connection and try again later."
                 }
-                console.log(data);
             }).catch(err => {
                 console.error(err);
             }).finally(()=>{

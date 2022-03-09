@@ -26,7 +26,11 @@
 <script>
 export default { 
     name:'WeatherCondition',
-    props:['code', 'size', 'title'],
+    props:{
+        code: String,
+        size: Number,
+        title: String
+    },
     methods: {
         getFill: function() {
             switch(this.code) {
@@ -47,5 +51,5 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 </style>
