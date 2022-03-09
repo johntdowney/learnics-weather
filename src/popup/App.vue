@@ -37,12 +37,12 @@
                         <div v-if="submitted && !queryValid">
                             <p class="notification is-danger nowrap has-text-centered"> 
                                 Please, use one of the following 3 forms for your search:
+                                <ul class="has-text-weight-bold">
+                                    <li>City</li>
+                                    <li>City, State</li>
+                                    <li>City, State, Country</li>
+                                </ul>
                             </p>
-                            <ul class="has-text-weight-bold">
-                                <li>City</li>
-                                <li>City, State</li>
-                                <li>City, State, Country</li>
-                            </ul>
                         </div>
 
                     </div>
@@ -165,7 +165,7 @@ export default {
         query: function() {
             this.submitted = false;
             const segments = this.segmentQuery
-            this.queryValid = segments.length>= 0 && segments.length < 4;
+            this.queryValid = segments.length> 0 && segments.length < 4;
         }
     },
     computed: {
