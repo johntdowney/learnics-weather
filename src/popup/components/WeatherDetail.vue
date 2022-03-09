@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import OpenWeatherService from './services/OpenWeatherService.js';
+import OpenWeatherService from '../utils/OpenWeatherService.js';
 import WeatherCondition from './WeatherCondition.vue';
 
 export default {

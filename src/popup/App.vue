@@ -95,11 +95,10 @@
 
 <script>
 import axios from 'axios';
-import Spinner from './Spinner.vue';
-import WeatherDetail from './WeatherDetail.vue';
-import WeatherForecast from './WeatherForecast.vue';
-import OpenWeatherService from './services/OpenWeatherService.js';
-
+import Spinner from './components/Spinner.vue';
+import WeatherDetail from './components/WeatherDetail.vue';
+import WeatherForecast from './components/WeatherForecast.vue';
+import OpenWeatherService from './utils/OpenWeatherService.js';
 
 const SLIDESHOW_INTERVAL_SECONDS = 25;
 // A map of the number of photos available for each weather condition code.
