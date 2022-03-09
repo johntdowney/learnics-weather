@@ -1,12 +1,11 @@
 import axios from 'axios';
-
-const API_URL = 'https://api.openweathermap.org';
+import WEATHER_API_URL from './Constants.js';
 
 export default {
 	async queryCurrentWeather(appId, ...querySegments) {
 		let result = null;
 		try {
-			const url = new URL('/data/2.5/weather', API_URL);
+			const url = new URL('/data/2.5/weather', WEATHER_API_URL);
 			url.searchParams.set('appid', appId);
 			url.searchParams.set('q', querySegments);
 
@@ -24,7 +23,7 @@ export default {
 		let result = null;
 		try {
 
-			const url = new URL('/data/2.5/forecast', API_URL);
+			const url = new URL('/data/2.5/forecast', WEATHER_API_URL);
 			url.searchParams.set('appid', appId);
 			url.searchParams.set('q', querySegments);
 
