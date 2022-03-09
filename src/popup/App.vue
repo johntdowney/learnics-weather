@@ -1,6 +1,6 @@
 <template>
 <section class="hero is-small is-primary main-app-wrapper" 
-        v-bind:style="{ 'background-image': bgImageUrl }">
+        v-bind:style="{ 'background-image': bgImageUrl() }">
     <div class="hero-body">
         <div>
             <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap">
@@ -169,10 +169,6 @@ export default {
         }
     },
     computed: {
-        bgImageUrl() {
-            const filePath = `${this.data?.current?.weather[0].icon || '01d'}/0${this.loadedPhoto}.jpg`;
-            return 'url(' + (this.photoCache[filePath] || `${S3_BUCKET_URL}/bg-small/${filePath}`) + ')';
-        },
         isSubmitEnabled() {
             return (this.submitted && (!this.queryValid || this.data?.current?.isAxiosError)) || this.loadingWeatherData;
         },
@@ -181,6 +177,10 @@ export default {
         }
     },
     methods: {
+        bgImageUrl() {
+            const filePath = `${this.data?.current?.weather[0].icon || '01d'}/0${this.loadedPhoto}.jpg`;
+            return 'url(' + (this.photoCache[filePath] || `${S3_BUCKET_URL}/bg-small/${filePath}`) + ')';
+        },
         updatePhoto: function(newPhotoNo) {
             let newUrl = `${this.data?.current?.weather[0].icon || '01d'}/0${newPhotoNo}.jpg`;
             if(!this.photoCache[newUrl]) {
