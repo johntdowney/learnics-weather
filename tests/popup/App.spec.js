@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import App from './../src/popup/App.vue'
+import App from '../../src/popup/App.vue'
 
 describe('App', function() {
   

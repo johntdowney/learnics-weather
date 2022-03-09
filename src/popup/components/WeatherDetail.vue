@@ -3,11 +3,9 @@
     <div class="block is-flex is-align-items-center is-flex-direction-row is-flex-wrap-nowrap is-justify-content-space-around">
         <div>
             <div class="has-text-centered block">
-                <div v-for="item in weatherData.weather" 
-                    :key="item.id"
-                    class="subtitle is-6 nowrap">
-                    <div class="is-uppercase mb-4"><strong>{{item.description}}</strong></div>
-                    <div><WeatherCondition :code="item.icon" :size="75"></WeatherCondition></div>
+                <div class="subtitle is-6 nowrap">
+                    <div class="is-uppercase mb-4"><strong>{{weatherData.weather[0].description}}</strong></div>
+                    <div><WeatherCondition :code="weatherData.weather[0].icon" :size="75"></WeatherCondition></div>
                 </div>
             </div>
         </div>

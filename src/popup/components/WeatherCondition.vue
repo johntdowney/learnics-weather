@@ -40,7 +40,7 @@ export default {
                 case '04d':
                     return 'white';
                 default:
-                    if(this.code.charAt(this.code.length-1) === 'n') {
+                    if(this.code?.charAt(this.code.length-1) === 'n') {
                         return '#8d8dca';
                     }
                     else return 'gray';
