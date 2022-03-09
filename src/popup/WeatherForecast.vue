@@ -13,7 +13,6 @@
 <script>
 import OpenWeatherService from './services/OpenWeatherService.js';
 import WeatherCondition from './WeatherCondition.vue';
-const DAYS = ['Mon','Tues','Wed','Thu','Fri','Sat','Sun'];
 
 export default {
     name:'WeatherForecast',
@@ -35,7 +34,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .weather-icon-small {
     margin: -15px 0 -15px 0; 
     opacity:0.7;

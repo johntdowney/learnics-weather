@@ -82,7 +82,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .selected-unit {
     font-weight:bold;
 }

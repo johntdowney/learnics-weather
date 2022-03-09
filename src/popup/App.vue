@@ -94,11 +94,12 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Spinner from './Spinner.vue';
 import WeatherDetail from './WeatherDetail.vue';
 import WeatherForecast from './WeatherForecast.vue';
 import OpenWeatherService from './services/OpenWeatherService.js';
-import axios from 'axios';
+
 
 const SLIDESHOW_INTERVAL_SECONDS = 25;
 // A cache of object URLS to prevent flicker during the background image slide show.
@@ -237,7 +238,7 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style>
 .spinner {
     transition: opacity 0.5s;
 }

@@ -22,7 +22,7 @@
 export default { }
 </script>
 
-<style lang="sass">
+<style>
 .spin {
     animation: spin-animation 1s infinite;
     animation-timing-function: linear;
