@@ -1,5 +1,5 @@
 import axios from 'axios';
-import WEATHER_API_URL from './Constants.js';
+import { WEATHER_API_URL } from './Constants.js';
 
 export default {
 	async queryCurrentWeather(appId, ...querySegments) {
