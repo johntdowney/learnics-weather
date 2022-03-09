@@ -1,6 +1,6 @@
 <template>
 <section class="hero is-small is-primary main-app-wrapper" 
-        v-bind:style="{ 'background-image': getBackgroundImageUrl() }">
+        v-bind:style="{ 'background-image': bgImageUrl }">
     <div class="hero-body">
         <div>
             <div class="block is-flex is-flex-direction-row is-flex-wrap-nowrap">
@@ -48,7 +48,7 @@
                     </div>
                     <div class="has-text-centered">
                         <button class="button is-success" 
-                                :disabled="isSubmitEnabled()" 
+                                :disabled="isSubmitEnabled" 
                                 v-bind:class="{ 'is-loading' : loadingWeatherData }" 
                                 type="submit">
                             Submit
@@ -102,13 +102,13 @@ import OpenWeatherService from './services/OpenWeatherService.js';
 
 
 const SLIDESHOW_INTERVAL_SECONDS = 25;
-// A cache of object URLS to prevent flicker during the background image slide show.
-const PHOTO_CACHE = {}
 // A map of the number of photos available for each weather condition code.
 const PHOTOS = {
     '01d':8,'01n':7, '02d':2,'02n':3, '03d':4,'03n':3, '04d':4,'04n':4, '09d':3,
     '09n':4, '10d':1,'10n':3, '11d':4,'11n':7, '13d':4,'13n':2, '50d':8, '50n':5 
 }
+const S3_BUCKET_URL = 'https://learnics-weather.s3.amazonaws.com';
+const API_GATEWAY_URL = 'https://kwly7hekq8.execute-api.us-east-1.amazonaws.com/default/apiSecureKeys';
 
 export default {
     name:'App',
@@ -119,6 +119,7 @@ export default {
     },
     data() {
         return { 
+            photoCache:{},
             errorMessage:'',
             loadingUserLocation: true,
             loadingWeatherData: true,
@@ -136,7 +137,7 @@ export default {
     async mounted() {
 
         try {
-            const apiKeys = await axios.post('https://kwly7hekq8.execute-api.us-east-1.amazonaws.com/default/apiSecureKeys', {});
+            const apiKeys = await axios.post(API_GATEWAY_URL, {});
             this.openWeatherAppId = apiKeys?.data?.message;
         } catch(e) { 
             this.failedToLoadAPIKey = true;
@@ -146,8 +147,6 @@ export default {
 
         try {
             const response = await axios.get('https://geolocation-db.com/json');
-            response.data.city = null;
-            response.data.state = null;
             if(!response.data.city || !response.data.state) {
                 throw "There was a problem loading your location.  Please try again later."
             }
@@ -176,30 +175,32 @@ export default {
             this.queryValid = segments.length>= 0 && segments.length < 4;
         }
     },
+    computed: {
+        bgImageUrl() {
+            const filePath = `${this.data?.current?.weather[0].icon || '01d'}/0${this.loadedPhoto}.jpg`;
+            return 'url(' + (this.photoCache[filePath] || `${S3_BUCKET_URL}/bg-small/${filePath}`) + ')';
+        },
+        isSubmitEnabled() {
+            return (this.submitted && (!this.queryValid || this.data?.current?.isAxiosError)) || this.loadingWeatherData;
+        },
+    },
     methods: {
         updatePhoto: function(newPhotoNo) {
             let newUrl = `${this.data?.current?.weather[0].icon || '01d'}/0${newPhotoNo}.jpg`;
-            if(!PHOTO_CACHE[newUrl]) {
+            if(!this.photoCache[newUrl]) {
                 fetch(`https://learnics-weather.s3.amazonaws.com/bg-small/${newUrl}`).then(resp=>resp.blob()).then((blob)=> {
-                    PHOTO_CACHE[newUrl] = URL.createObjectURL(blob)
+                    this.photoCache[newUrl] = URL.createObjectURL(blob)
                     this.loadedPhoto = newPhotoNo
                 });
             } else {
                 this.loadedPhoto = newPhotoNo
             }
         },
-        getBackgroundImageUrl: function() {
-            const filePath = `${this.data?.current?.weather[0].icon || '01d'}/0${this.loadedPhoto}.jpg`;
-            return 'url(' + (PHOTO_CACHE[filePath] || `https://learnics-weather.s3.amazonaws.com/bg-small/${filePath}`) + ')';
-        },
         segmentQuery: function() {
             return this.query.trim().split(',').map(e=>e.trim()).filter(e=>e.length>0);
         },
         toggleTempUnit: function(u) {
             this.unit = u;
-        },
-        isSubmitEnabled: function() {
-            return (this.submitted && (!this.queryValid || this.data?.current?.isAxiosError)) || this.loadingWeatherData;
         },
         submitQuery: function(e) {
             e.preventDefault();
