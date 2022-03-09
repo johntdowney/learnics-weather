@@ -7,3 +7,4 @@ export const PHOTOS = {
 export const S3_BUCKET_URL = 'https://learnics-weather.s3.amazonaws.com';
 export const API_GATEWAY_URL = 'https://kwly7hekq8.execute-api.us-east-1.amazonaws.com/default/apiSecureKeys';
 export const GEO_API_URL = 'https://geolocation-db.com/json';
+export const WEATHER_API_URL = 'https://geolocation-db.com/json';

@@ -100,7 +100,7 @@ import WeatherDetail from './components/WeatherDetail.vue';
 import WeatherForecast from './components/WeatherForecast.vue';
 import OpenWeatherService from './utils/OpenWeatherService.js';
 import { S3_BUCKET_URL, API_GATEWAY_URL, GEO_API_URL, 
-        SLIDE_SHOW_INTERVAL_SECONDS, PHOTOS } from './utils/Constants.js';
+        SLIDESHOW_INTERVAL_SECONDS, PHOTOS } from './utils/Constants.js';
 
 
 export default {
